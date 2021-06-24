@@ -12,21 +12,19 @@
 </template>
 <script lang="ts">
 import Vue from 'vue'
-import Component from 'vue-class-component'
 
-@Component
-export default class App extends Vue {
-  count = 2;
-  name = 'iPhone';
-  prop = {
-    color: 'black',
-    type: '11'
-  };
-
-  test () {
-    console.log(this.name)
+export default Vue.extend({
+  data () {
+    return {
+      count: 2,
+      name: 'iPhone',
+      prop: {
+        color: 'black',
+        type: '11'
+      }
+    }
   }
-}
+})
 </script>
 <style lang="scss" scoped>
 p {
