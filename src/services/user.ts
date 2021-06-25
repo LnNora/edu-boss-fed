@@ -3,6 +3,7 @@
  */
 import request from "@/utils/request"
 import qs from "qs"
+import store from '@/store'
 
 interface User {
   phone: string
@@ -15,5 +16,15 @@ export const login = (data: User) => {
     url: '/front/user/login',
     // headers: { 'content-type': 'application/x-www-form-urlencoded' },
     data: qs.stringify(data)
+  })
+}
+
+export const getUserInfo = () => {
+  return request({
+    method: 'GET',
+    url: '/front/user/getInfo',
+    headers: {
+      Authorization: store.state.user.access_token
+    }
   })
 }
