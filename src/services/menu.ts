@@ -44,3 +44,18 @@ export const deleteMenu = (id: number) => {
     url: `/boss/menu/${id}`
   })
 }
+
+export const getMenuNodeList = () => {
+  return request({
+    method: 'GET',
+    url: '/boss/menu/getMenuNodeList'
+  })
+}
+
+export const allocateRoleMenu = (data: any) => {
+  return request({
+    method: 'POST',
+    url: '/boss/menu/allocateRoleMenus',
+    data
+  })
+}
