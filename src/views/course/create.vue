@@ -1,0 +1,148 @@
+<template>
+  <div class="course-create">
+    <el-card class="box-card">
+      <div slot="header" class="clearfix">
+        <el-steps :active="activeStep" simple>
+          <el-step
+            v-for="(step, index) in steps"
+            :key="step.title"
+            :title="step.title"
+            :icon="step.icon"
+            @click.native="activeStep=index"
+          ></el-step>
+        </el-steps>
+      </div>
+      <el-form label-width="80px">
+        <div v-show="activeStep === 0">
+          <el-form-item label="课程名称">
+            <el-input></el-input>
+          </el-form-item>
+          <el-form-item label="课程名称">
+            <el-input></el-input>
+          </el-form-item>
+          <el-form-item label="课程名称">
+            <el-input></el-input>
+          </el-form-item>
+          <el-form-item label="课程名称">
+            <el-input></el-input>
+          </el-form-item>
+          <el-form-item label="课程名称">
+            <el-input></el-input>
+          </el-form-item>
+          <el-form-item label="课程名称">
+            <el-input></el-input>
+          </el-form-item>
+          <el-form-item label="排序">
+            <el-input-number label="排序"></el-input-number>
+          </el-form-item>
+        </div>
+        <div v-show="activeStep === 1">
+          <el-form-item label="课程封面">
+            <el-upload
+              class="avatar-uploader"
+              action="https://jsonplaceholder.typicode.com/posts/"
+              :show-file-list="false"
+              :on-success="handleAvatarSuccess"
+              :before-upload="beforeAvatarUpload">
+              <img v-if="imageUrl" :src="imageUrl" class="avatar">
+              <i v-else class="el-icon-plus avatar-uploader-icon"></i>
+            </el-upload>
+          </el-form-item>
+          <el-form-item label="解锁封面">
+            <el-upload
+              class="avatar-uploader"
+              action="https://jsonplaceholder.typicode.com/posts/"
+              :show-file-list="false"
+              :on-success="handleAvatarSuccess"
+              :before-upload="beforeAvatarUpload">
+              <img v-if="imageUrl" :src="imageUrl" class="avatar">
+              <i v-else class="el-icon-plus avatar-uploader-icon"></i>
+            </el-upload>
+          </el-form-item>
+        </div>
+        <div v-show="activeStep === 2">
+          销售信息
+        </div>
+        <div v-show="activeStep === 3">
+          秒杀活动
+        </div>
+        <div v-show="activeStep === 4">
+          课程详情
+          <el-form-item>
+            <el-button type="primary">保存</el-button>
+          </el-form-item>
+        </div>
+        <el-form-item>
+          <el-button v-if="activeStep >= 0 && activeStep < 4" @click="activeStep++">下一步</el-button>
+        </el-form-item>
+      </el-form>
+    </el-card>
+  </div>
+</template>
+
+<script lang="ts">
+import Vue from 'vue'
+export default Vue.extend({
+  name: 'CourseCreate',
+  data () {
+    return {
+      activeStep: 0,
+      steps: [
+        { title: '基本信息', icon: 'el-icon-edit' },
+        { title: '课程封面', icon: 'el-icon-edit' },
+        { title: '销售信息', icon: 'el-icon-edit' },
+        { title: '秒杀活动', icon: 'el-icon-edit' },
+        { title: '课程详情', icon: 'el-icon-edit' }
+      ],
+      imageUrl: ''
+    }
+  },
+  methods: {
+    handleAvatarSuccess (res: any, file: any) {
+      console.log(res)
+      this.imageUrl = URL.createObjectURL(file.raw)
+    },
+    beforeAvatarUpload (file: any) {
+      const isJPG = file.type === 'image/jpeg'
+      const isLt2M = file.size / 1024 / 1024 < 2
+
+      if (!isJPG) {
+        this.$message.error('上传头像图片只能是 JPG 格式!')
+      }
+      if (!isLt2M) {
+        this.$message.error('上传头像图片大小不能超过 2MB!')
+      }
+      return isJPG && isLt2M
+    }
+  }
+})
+</script>
+
+<style lang="scss" scoped>
+.el-step {
+  cursor: pointer;
+}
+.avatar-uploader .el-upload {
+  border: 1px dashed #d9d9d9;
+  border-radius: 6px;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+}
+.avatar-uploader .el-upload:hover {
+  border-color: #409EFF;
+}
+.avatar-uploader-icon {
+  font-size: 28px;
+  color: #8c939d;
+  width: 178px;
+  height: 178px;
+  line-height: 178px;
+  text-align: center;
+}
+.avatar {
+  width: 178px;
+  height: 178px;
+  display: block;
+}
+</style>
