@@ -16,36 +16,34 @@
         <!--基本信息-->
         <div v-show="activeStep === 0">
           <el-form-item label="课程名称">
-            <el-input></el-input>
+            <el-input v-model="course.courseName"></el-input>
           </el-form-item>
-          <el-form-item label="课程名称">
-            <el-input></el-input>
+          <el-form-item label="课程简介">
+            <el-input v-model="course.brief"></el-input>
           </el-form-item>
-          <el-form-item label="课程名称">
-            <el-input></el-input>
+          <el-form-item label="课程概述">
+            <el-input v-model="course.previewFirstField" type="textarea" placeholder="概述1" style="margin-bottom:10px"></el-input>
+            <el-input v-model="course.previewSecondField" type="textarea" placeholder="概述2"></el-input>
           </el-form-item>
-          <el-form-item label="课程名称">
-            <el-input></el-input>
+          <el-form-item label="讲师姓名">
+            <el-input v-model="course.teacherDTO.teacherName"></el-input>
           </el-form-item>
-          <el-form-item label="课程名称">
-            <el-input></el-input>
+          <el-form-item label="讲师简介">
+            <el-input v-model="course.teacherDTO.description"></el-input>
           </el-form-item>
-          <el-form-item label="课程名称">
-            <el-input></el-input>
-          </el-form-item>
-          <el-form-item label="排序">
-            <el-input-number label="排序"></el-input-number>
+          <el-form-item label="课程排序">
+            <el-input-number label="排序" v-model="course.sortNum"></el-input-number>
           </el-form-item>
         </div>
         <!--课程封面-->
         <div v-show="activeStep === 1">
           <el-form-item label="课程封面">
             <el-upload
+              action=""
               class="avatar-uploader"
-              action="https://jsonplaceholder.typicode.com/posts/"
               :show-file-list="false"
-              :on-success="handleAvatarSuccess"
-              :before-upload="beforeAvatarUpload">
+              :http-request="handleUpload"
+              >
               <img v-if="imageUrl" :src="imageUrl" class="avatar">
               <i v-else class="el-icon-plus avatar-uploader-icon"></i>
             </el-upload>
@@ -57,7 +55,7 @@
               :show-file-list="false"
               :on-success="handleAvatarSuccess"
               :before-upload="beforeAvatarUpload">
-              <img v-if="imageUrl" :src="imageUrl" class="avatar">
+              <img v-if="course.courseListImg" :src="course.courseListImg" class="avatar">
               <i v-else class="el-icon-plus avatar-uploader-icon"></i>
             </el-upload>
           </el-form-item>
@@ -121,7 +119,10 @@
 
         </div>
         <div v-show="activeStep === 4">
-          课程详情
+          <el-form-item label="课程详情">
+              <el-input placeholder="请输入内容" type="textarea">
+              </el-input>
+            </el-form-item>
           <el-form-item>
             <el-button type="primary">保存</el-button>
           </el-form-item>
@@ -136,6 +137,8 @@
 
 <script lang="ts">
 import Vue from 'vue'
+import { saveOrUpdateCourse, uploadCourseImage } from '@/services/course'
+
 export default Vue.extend({
   name: 'CourseCreate',
   data () {
@@ -150,13 +153,50 @@ export default Vue.extend({
       ],
       imageUrl: '', // 预览图片地址
       isSeckill: true, // 开启秒杀
-      value1: '' // 秒杀开始时间
+      value1: '', // 秒杀开始时间
+      course: {
+        id: 0,
+        courseName: "",
+        brief: "",
+        teacherDTO: {
+          id: 0,
+          courseId: 0,
+          teacherName: "",
+          teacherHeadPicUrl: "",
+          position: "",
+          description: ""
+        },
+        courseDescriptionMarkDown: "",
+        price: 0,
+        discounts: 0,
+        priceTag: "",
+        discountsTag: "",
+        isNew: true,
+        isNewDes: "",
+        courseListImg: "",
+        courseImgUrl: "",
+        sortNum: 0,
+        previewFirstField: "",
+        previewSecondField: "",
+        status: 0,
+        sales: 0,
+        activityCourse: true,
+        activityCourseDTO: {
+          id: 0,
+          courseId: 0,
+          beginTime: "",
+          endTime: "",
+          amount: 0,
+          stock: 0
+        },
+        autoOnlineTime: ""
+      }
     }
   },
   methods: {
     handleAvatarSuccess (res: any, file: any) {
       console.log(res)
-      this.imageUrl = URL.createObjectURL(file.raw)
+      this.course.courseListImg = URL.createObjectURL(file.raw)
     },
     beforeAvatarUpload (file: any) {
       const isJPG = file.type === 'image/jpeg'
@@ -169,6 +209,12 @@ export default Vue.extend({
         this.$message.error('上传头像图片大小不能超过 2MB!')
       }
       return isJPG && isLt2M
+    },
+    async handleUpload (options: any) {
+      const fd = new FormData()
+      fd.append('file', options.file)
+      const { data } = await uploadCourseImage(fd)
+      this.course.courseListImg = data.data.name
     }
   }
 })

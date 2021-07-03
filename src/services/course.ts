@@ -16,3 +16,19 @@ export const changeState = (params: any) => {
     params
   })
 }
+
+export const saveOrUpdateCourse = (data: any) => {
+  return request({
+    method: 'POST',
+    url: '/boss/course/saveOrUpdateCourse',
+    data
+  })
+}
+
+export const uploadCourseImage = (data: any) => {
+  return request({
+    method: 'POST',
+    url: '/boss/course/upload',
+    data
+  })
+}
