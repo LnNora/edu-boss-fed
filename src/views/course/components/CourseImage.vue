@@ -5,7 +5,6 @@
       type="circle"
       :percentage="percentage"
       :width="178"
-      :status="percentage === 100 ? 'success': 'undefined'"
     />
     <el-upload
       v-else

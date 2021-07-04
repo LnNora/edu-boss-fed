@@ -70,7 +70,7 @@
           align="center"
         >
           <template slot-scope="scope">
-            <el-button @click="handleEdit(scope.row)" size="small" type="success">上架</el-button>
+            <el-button @click="onStateChange(scope.row)" size="small" type="success">上架</el-button>
             <el-button @click="handleEdit(scope.row)" size="small">编辑</el-button>
             <el-button @click="handleDelete(scope.row)"  size="small" >内容管理</el-button>
           </template>

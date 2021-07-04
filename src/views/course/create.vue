@@ -47,55 +47,55 @@
         <!--销售信息-->
         <div v-show="activeStep === 2">
           <el-form-item label="售卖价格">
-            <el-input placeholder="请输入售卖价格" v-model="input2">
+            <el-input placeholder="请输入售卖价格" v-model="course.discounts">
               <template slot="append">元</template>
             </el-input>
           </el-form-item>
           <el-form-item label="原价">
-            <el-input placeholder="请输入原价" v-model="input2">
+            <el-input placeholder="请输入原价" v-model="course.price">
               <template slot="append">元</template>
             </el-input>
           </el-form-item>
           <el-form-item label="销量">
-            <el-input placeholder="请输入销量" v-model="input2">
+            <el-input placeholder="请输入销量" v-model="course.sales">
               <template slot="append">单</template>
             </el-input>
           </el-form-item>
           <el-form-item label="活动标签">
-            <el-input placeholder="请输入活动标签" v-model="input2"></el-input>
+            <el-input placeholder="请输入活动标签" v-model="course.discountsTag"></el-input>
           </el-form-item>
         </div>
         <!--秒杀活动-->
         <div v-show="activeStep === 3">
           <el-form-item label="限时秒杀开关">
             <el-switch
-              v-model="isSeckill"
+              v-model="course.activityCourse"
               active-color="#13ce66"
               inactive-color="#ff4949">
             </el-switch>
           </el-form-item>
-          <template v-if="isSeckill">
+          <template v-if="course.activityCourse">
             <el-form-item label="开始时间">
               <el-date-picker
-                v-model="value1"
+                v-model="course.activityCourseDTO.beginTime"
                 type="datetime"
                 placeholder="选择开始时间">
               </el-date-picker>
             </el-form-item>
             <el-form-item label="结束时间">
               <el-date-picker
-                v-model="value1"
+                v-model="course.activityCourseDTO.endTime"
                 type="datetime"
                 placeholder="选择结束时间">
               </el-date-picker>
             </el-form-item>
             <el-form-item label="秒杀价">
-              <el-input placeholder="请输入秒杀价" v-model="input2">
+              <el-input placeholder="请输入秒杀价" v-model="course.activityCourseDTO.amount">
                 <template slot="append">元</template>
               </el-input>
             </el-form-item>
             <el-form-item label="秒杀库存">
-              <el-input placeholder="请输入秒杀库存" v-model="input2">
+              <el-input placeholder="请输入秒杀库存" v-model="course.activityCourseDTO.stock">
                 <template slot="append">个</template>
               </el-input>
             </el-form-item>
@@ -104,11 +104,19 @@
         </div>
         <div v-show="activeStep === 4">
           <el-form-item label="课程详情">
-              <el-input placeholder="请输入内容" type="textarea">
-              </el-input>
-            </el-form-item>
+              <TextEditor v-model="course.courseDescriptionMarkDown"/>
+          </el-form-item>
+          <el-form-item label="是否发布">
+            <el-switch
+              v-model="course.status"
+              :active-value="1"
+              :inactive-value="0"
+              active-color="#13ce66"
+              inactive-color="#ff4949">
+            </el-switch>
+          </el-form-item>
           <el-form-item>
-            <el-button type="primary">保存</el-button>
+            <el-button type="primary" @click="handleSave">保存</el-button>
           </el-form-item>
         </div>
         <el-form-item>
@@ -123,9 +131,13 @@
 import Vue from 'vue'
 import { saveOrUpdateCourse } from '@/services/course'
 import CourseImage from './components/CourseImage.vue'
+import TextEditor from '@/components/TextEditor/index.vue'
 
 export default Vue.extend({
-  components: { CourseImage },
+  components: {
+    CourseImage,
+    TextEditor
+  },
   name: 'CourseCreate',
   data () {
     return {
@@ -137,47 +149,49 @@ export default Vue.extend({
         { title: '秒杀活动', icon: 'el-icon-edit' },
         { title: '课程详情', icon: 'el-icon-edit' }
       ],
-      imageUrl: '', // 预览图片地址
-      isSeckill: true, // 开启秒杀
-      value1: '', // 秒杀开始时间
-      input2: '',
       course: {
-        id: 0,
-        courseName: "",
-        brief: "",
+        // id: 0,
+        courseName: "课程名称",
+        brief: "课程简介",
         teacherDTO: {
-          id: 0,
-          courseId: 0,
-          teacherName: "",
+          // id: 0,
+          // courseId: 0,
+          teacherName: "讲师姓名",
           teacherHeadPicUrl: "",
           position: "",
-          description: ""
+          description: "讲师简介"
         },
-        courseDescriptionMarkDown: "",
-        price: 0,
-        discounts: 0,
+        courseDescriptionMarkDown: "课程详情",
+        price: 5000,
+        discounts: 2000,
         priceTag: "",
-        discountsTag: "",
+        discountsTag: "活动标签",
         isNew: true,
         isNewDes: "",
         courseListImg: "",
         courseImgUrl: "",
-        sortNum: 0,
-        previewFirstField: "",
-        previewSecondField: "",
+        sortNum: 5,
+        previewFirstField: "概述1",
+        previewSecondField: "概述2",
         status: 0,
-        sales: 0,
+        sales: 20,
         activityCourse: true,
         activityCourseDTO: {
-          id: 0,
-          courseId: 0,
+          // id: 0,
+          // courseId: 0,
           beginTime: "",
           endTime: "",
-          amount: 0,
-          stock: 0
+          amount: 9.9,
+          stock: 10
         },
         autoOnlineTime: ""
       }
+    }
+  },
+  methods: {
+    async handleSave () {
+      const { data } = await saveOrUpdateCourse(this.course)
+      console.log(data)
     }
   }
 })
