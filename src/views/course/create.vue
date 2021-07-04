@@ -38,26 +38,10 @@
         <!--课程封面-->
         <div v-show="activeStep === 1">
           <el-form-item label="课程封面">
-            <el-upload
-              action=""
-              class="avatar-uploader"
-              :show-file-list="false"
-              :http-request="handleUpload"
-              >
-              <img v-if="imageUrl" :src="imageUrl" class="avatar">
-              <i v-else class="el-icon-plus avatar-uploader-icon"></i>
-            </el-upload>
+            <course-image v-model="course.courseListImg" />
           </el-form-item>
           <el-form-item label="解锁封面">
-            <el-upload
-              class="avatar-uploader"
-              action="https://jsonplaceholder.typicode.com/posts/"
-              :show-file-list="false"
-              :on-success="handleAvatarSuccess"
-              :before-upload="beforeAvatarUpload">
-              <img v-if="course.courseListImg" :src="course.courseListImg" class="avatar">
-              <i v-else class="el-icon-plus avatar-uploader-icon"></i>
-            </el-upload>
+            <course-image v-model="course.courseImgUrl" />
           </el-form-item>
         </div>
         <!--销售信息-->
@@ -137,9 +121,11 @@
 
 <script lang="ts">
 import Vue from 'vue'
-import { saveOrUpdateCourse, uploadCourseImage } from '@/services/course'
+import { saveOrUpdateCourse } from '@/services/course'
+import CourseImage from './components/CourseImage.vue'
 
 export default Vue.extend({
+  components: { CourseImage },
   name: 'CourseCreate',
   data () {
     return {
@@ -154,6 +140,7 @@ export default Vue.extend({
       imageUrl: '', // 预览图片地址
       isSeckill: true, // 开启秒杀
       value1: '', // 秒杀开始时间
+      input2: '',
       course: {
         id: 0,
         courseName: "",
@@ -192,30 +179,6 @@ export default Vue.extend({
         autoOnlineTime: ""
       }
     }
-  },
-  methods: {
-    handleAvatarSuccess (res: any, file: any) {
-      console.log(res)
-      this.course.courseListImg = URL.createObjectURL(file.raw)
-    },
-    beforeAvatarUpload (file: any) {
-      const isJPG = file.type === 'image/jpeg'
-      const isLt2M = file.size / 1024 / 1024 < 2
-
-      if (!isJPG) {
-        this.$message.error('上传头像图片只能是 JPG 格式!')
-      }
-      if (!isLt2M) {
-        this.$message.error('上传头像图片大小不能超过 2MB!')
-      }
-      return isJPG && isLt2M
-    },
-    async handleUpload (options: any) {
-      const fd = new FormData()
-      fd.append('file', options.file)
-      const { data } = await uploadCourseImage(fd)
-      this.course.courseListImg = data.data.name
-    }
   }
 })
 </script>
@@ -224,27 +187,5 @@ export default Vue.extend({
 .el-step {
   cursor: pointer;
 }
-::v-deep .avatar-uploader .el-upload {
-  border: 1px dashed #d9d9d9;
-  border-radius: 6px;
-  cursor: pointer;
-  position: relative;
-  overflow: hidden;
-}
-::v-deep .avatar-uploader .el-upload:hover {
-  border-color: #409EFF;
-}
-.avatar-uploader-icon {
-  font-size: 28px;
-  color: #8c939d;
-  width: 178px;
-  height: 178px;
-  line-height: 178px;
-  text-align: center;
-}
-.avatar {
-  width: 178px;
-  height: 178px;
-  display: block;
-}
+
 </style>
