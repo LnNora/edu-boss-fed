@@ -71,7 +71,7 @@
         >
           <template slot-scope="scope">
             <el-button @click="onStateChange(scope.row)" size="small" type="success">上架</el-button>
-            <el-button @click="handleEdit(scope.row)" size="small">编辑</el-button>
+            <el-button @click="$router.push({ name: 'course-edit', params: { courseId: scope.row.id } })" size="small">编辑</el-button>
             <el-button @click="handleDelete(scope.row)"  size="small" >内容管理</el-button>
           </template>
         </el-table-column>
@@ -102,12 +102,12 @@ export default Vue.extend({
       courses: [],
       form: {
         courseName: '',
-        status: 0,
+        status: '',
         currentPage: 1, // 默认查询第1页
         pageSize: 10 // 每页大小
       },
       totalCount: 0,
-      ttt: [],
+      ttt: [{ name: '全部', id: '' }, { name: '上架', id: 1 }, { name: '下架', id: 0 }],
       isLoading: true
     }
   },

@@ -1,6 +1,6 @@
 <template>
   <div class="course-create">
-    <CreateOrUpdate/>
+    <CreateOrUpdate is-edit :courseId="courseId"/>
   </div>
 </template>
 
@@ -12,7 +12,13 @@ export default Vue.extend({
   components: {
     CreateOrUpdate
   },
-  name: 'CourseCreate'
+  name: 'CourseEdit',
+  props: {
+    courseId: {
+      type: [String, Number],
+      required: true
+    }
+  }
 })
 </script>
 
