@@ -72,7 +72,7 @@
           <template slot-scope="scope">
             <el-button @click="onStateChange(scope.row)" size="small" type="success">上架</el-button>
             <el-button @click="$router.push({ name: 'course-edit', params: { courseId: scope.row.id } })" size="small">编辑</el-button>
-            <el-button @click="handleDelete(scope.row)"  size="small" >内容管理</el-button>
+            <el-button @click="$router.push({ name: 'course-section', params: { courseId: scope.row.id } })"  size="small" >内容管理</el-button>
           </template>
         </el-table-column>
       </el-table>
